@@ -1,0 +1,18 @@
+# Operating System / Editor Specific
+.DS_Store
+.idea/
+.vscode/
+
+# Build and Runtime Artifacts
+/tmp/
+/build/
+__pycache__/
+node_modules/
+
+# Logs and Temporary Files
+*.log
+*.tmp
+*.bak
+
+# Environment Variables
+.env
