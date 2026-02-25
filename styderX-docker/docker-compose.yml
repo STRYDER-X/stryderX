@@ -1,0 +1,23 @@
+name: stryderx
+services:
+  styderx:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      labels:
+        org.opencontainers.image.authors: "Julian A. Rendon"
+        org.opencontainers.image.source: "https://github.com/STRYDER-X/stryderX"
+        org.opencontainers.image.description: "The universal container environment and hardware-abstraction layer for robotics project."
+      args:
+        - APP_VERSION=${APP_VERSION:-dev}
+        - GIT_COMMIT=${GIT_COMMIT:-unknown}
+        - BUILD_DATE=${BUILD_DATE:-unknown}
+        - ROS_DISTRO=${ROS_DISTRO}
+        - USER_UID=${UID:-1000}
+        - USER_GID=${GID:-1000}
+    image: stryderx:${APP_VERSION:-dev}
+    container_name: stryderx-robot
+    tty: true
+    stdin_open: true
+    command: /bin/bash
+    network_mode: host
