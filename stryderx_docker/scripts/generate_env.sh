@@ -6,20 +6,6 @@ set -e
 ROS_DISTRO="humble"
 TOP_LVL_DIR=$(pwd)/../
 
-# --- HELP FUNCTIONS ---
-show_help() {
-    echo "Usage: ./generate_env.sh [OPTIONS]"
-    echo ""
-    echo "Options:"
-    echo "  -h, --help          Show this message"
-    echo "  -r, --ros_distro    Provide ROS distro explicitly."
-}
-
-if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-    show_help
-    exit 0
-fi
-
 GIT_COMMIT=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
 GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
