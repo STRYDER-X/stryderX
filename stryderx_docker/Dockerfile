@@ -1,5 +1,8 @@
 FROM jrendon514/robot-base-docker:humble-v0.1.1
 
+# Workspace for StryderX ROS2 packages
+RUN mkdir -p /home/rpi/stryderx && chown -R rpi:rpi /home/rpi/stryderx
+
 ARG APP_VERSION=DEV
 ARG GIT_COMMIT_HASH="unknown" 
 ARG BUILD_DATE="unknown"

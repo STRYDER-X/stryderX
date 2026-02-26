@@ -12,6 +12,8 @@ services:
         - USER_UID=${UID:-1000}
         - USER_GID=${GID:-1000}
     image: stryderx:${APP_VERSION:-dev}
+    volumes:
+      - ../src:/home/rpi/stryderx/src # Base Image robot-base-docker username is rpi
     container_name: stryderx-robot
     tty: true
     stdin_open: true
