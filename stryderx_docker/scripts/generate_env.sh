@@ -4,7 +4,8 @@
 set -e
 
 ROS_DISTRO="humble"
-TOP_LVL_DIR=$(pwd)/../
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TOP_LVL_DIR="$SCRIPT_DIR/.."
 
 GIT_COMMIT=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
