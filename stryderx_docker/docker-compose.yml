@@ -1,6 +1,6 @@
 name: stryderx
 services:
-  styderx:
+  stryderx:
     build:
       context: ..
       dockerfile: stryderx_docker/Dockerfile
