@@ -1,0 +1,5 @@
+# Ignore everything by default
+**
+
+# Explicitly allow the Dockerfile (needed for the build to even start)
+!Dockerfile
