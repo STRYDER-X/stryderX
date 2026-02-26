@@ -1,4 +1,4 @@
-FROM jrendon514/robot-base-docker:humble-v0.1.1
+FROM jrendon514/robot-base-docker:humble-v0.2.0
 
 # Workspace for StryderX ROS2 packages
 RUN mkdir -p /home/rpi/stryderx && chown -R rpi:rpi /home/rpi/stryderx
