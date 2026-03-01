@@ -1,18 +1,27 @@
+# ROS 2 Workspace Directories
+/build/
+/install/
+/log/
+
 # Operating System / Editor Specific
 .DS_Store
 .idea/
 .vscode/
 
+# Python Artifacts
+__pycache__/
+*.pyc
+*.pyo
+
 # Build and Runtime Artifacts
 /tmp/
-/build/
-__pycache__/
 node_modules/
 
 # Logs and Temporary Files
 *.log
 *.tmp
 *.bak
+*~
 
 # Environment Variables
 .env
