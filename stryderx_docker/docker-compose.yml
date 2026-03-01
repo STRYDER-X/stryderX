@@ -3,7 +3,7 @@ services:
   stryderx:
     build:
       context: ..
-      dockerfile: stryderx_docker/Dockerfile
+      dockerfile: stryderx_docker/Dockerfile.dev
       args:
         - APP_VERSION=${APP_VERSION:-dev}
         - GIT_COMMIT=${GIT_COMMIT:-unknown}
@@ -14,7 +14,7 @@ services:
     image: stryderx:${APP_VERSION:-dev}
     container_name: stryderx-robot
     volumes:
-      - ../src:/home/rpi/stryderx/src # Base Image robot-base-docker username is rpi
+      - ../:/home/rpi/stryderx/src # Base Image robot-base-docker username is rpi
       - /dev/bus/usb:/dev/bus/usb # Required for camera controls like exposure/autofocus
     group_add:
       - video
