@@ -1,0 +1,3 @@
+[submodule "src/stryderx_hardware"]
+	path = src/stryderx_hardware
+	url = git@github.com:STRYDER-X/stryderx_hardware.git
