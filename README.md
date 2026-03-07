@@ -71,12 +71,12 @@ Following the **Two-Layer Hardware Interface**:
     make gate
     ```
     This will run the full pipeline: Setup -> Lint -> Build -> Test -> Report
->[!NOTE]
-> To see the full list of targets and their descriptions you can simple run `make`.
+    > [!NOTE]
+    > To see the full list of targets and their descriptions you can simple run `make`.
 
 ## Usage
 
->[!NOTE]
+> [!NOTE]
 > This project is currently a **Work in Progress**. While new feature are being implemented,
 > you can run the core camera server node to verify that the hardware interface.
 
@@ -109,8 +109,8 @@ Branches are named with the following convention: `type/distro/description-issue
 ### Quality Control
 
 - **Workspace Protection**: Automated via `pre-commit` hooks. Ensure you run `make lint` before pushing.
->[!NOTE]
-> ***It is reccommended that you commit from inside the container or installing `pre-commit` locally***
+> [!IMPORTANT]
+> ***It is recommended that you commit from inside the container or installing `pre-commit` locally***
 
 ## Troubleshooting
 
