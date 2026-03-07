@@ -21,6 +21,8 @@ LABEL org.opencontainers.image.authors="Julian A. Rendon" \
 RUN apt-get update && apt-get install -y --no-install-recommends \
     clang \
     clang-format \
+    doxygen \
+    graphviz \
     git \           
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
