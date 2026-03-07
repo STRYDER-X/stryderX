@@ -40,7 +40,7 @@ echo "🔗  Commit:       $GIT_COMMIT"
 echo "🏷️   Image Tag:    $TAG"
 echo "---------------------------------------"
 
-cat <<EOF > $TOP_LVL_DIR/.env
+cat <<EOF > "$TOP_LVL_DIR"/.env
 APP_VERSION=$TAG
 GIT_COMMIT=$GIT_COMMIT
 BUILD_DATE=$DATE

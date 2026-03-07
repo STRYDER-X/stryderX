@@ -43,8 +43,7 @@ clean: ## [Host] Stop container and prune volumes
 	$(call HOST_ONLY, $(MAKE) down && docker system prune -af --volumes)
 
 setup: ## Initialize git hooks in root and submodules
-	@chmod +x $(DOCKER_DIR)/setup_workspace.sh
-	@$(EXEC) "$(DOCKER_DIR)/setup_workspace.sh"
+	@$(EXEC) "$(DOCKER_DIR)/scripts/setup_pre_commit.sh"
 
 build: ## Build ROS 2 workspace
 	@$(EXEC) "source /opt/ros/humble/setup.bash && colcon build --symlink-install"

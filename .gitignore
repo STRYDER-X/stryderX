@@ -54,7 +54,7 @@ __pycache__/
 **/log/
 **/test_results/
 
-# Build System Specifics 
+# Build System Specifics
 .cmake/
 CMakeCache.txt
 CMakeFiles/
