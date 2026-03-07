@@ -125,6 +125,19 @@ Branches are named with the following convention: `type/distro/description-issue
 - **Workspace Protection**: Automated via `pre-commit` hooks. Ensure you run `make lint` before pushing.
 >[!IMPORTANT] ***It is reccommended that you commit from inside the container or installing `pre-commit` locally***
 
+## Troubleshooting
+
+The development container does not include SSH keys. More than likely when trying to push changes, **when inside the contianer**, to the remote repo errors will occur. To fix this you should updated the remote URL to HTTPS.
+```bash
+# Update remote URL to HTTPS
+git remote set-url https://github.com/STRYDER-X/stryderX.git
+
+# Verify the change
+git remote -v
+```
+
+For submodules, run `git submodule sync` after updating the main repository's remote.
+
 ## License
 
 This project is licensed under the [GNU General Public License v3.0](LICENSE).
