@@ -1,6 +1,6 @@
 # StryderX
 
-![ROS 2](https://img.shields.io/badge/ROS%202-Humble%7CIron%7CRolling-blue)
+![ROS 2](https://img.shields.io/badge/ROS%202-Humble-blue)
 [![License](https://img.shields.io/badge/license-GNU%20GPL-blue.svg)](LICENSE)
 
 **StryderX** is a modular RC robot platform designed for both autonomous and manual navigation. This repository serves as the main workspace, integrating hardware abstraction layers, simulation environments, and high-level control logic.
