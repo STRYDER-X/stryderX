@@ -53,27 +53,26 @@ Following the **Two-Layer Hardware Interface**:
 
 3. **Build & Launch**
 
-    Start the Docker stack and compile the workspace:
+    Start the Docker stack and enter the container:
 
     ```bash
     # Start Docker enironment
     make up
+    ```
 
-    # Build and compile source code
-    make build
-
+    ```bash
     # Enter the shell and source
     make shell
     ```
+
     Once inside container you should be placed inside the `stryderx` workspace.
     From there you can runthe following command to start the entire build process:
-
     ```bash
     make gate
     ```
     This will run the full pipeline: Setup -> Lint -> Build -> Test -> Report
-    >[!Note]
-    > To see the full list of targets and their descriptions you can simple run `make`.
+>[!NOTE]
+> To see the full list of targets and their descriptions you can simple run `make`.
 
 ## Usage
 
@@ -90,19 +89,6 @@ source install/setup.bash
 
 ros2 run stryderx_hardware camera_server_node
 ```
-
-## Docker Environment
-
-This project includes a robust Docker setup for reproducible builds.
-
-1. **Generate Environment Variables**:
-   The `stryderx_docker` package includes a script to configure the environment based on your current git branch and ROS distribution.
-
-   ```bash
-   cd src/stryderx_docker/scripts
-   ./generate_env.sh
-   ```
-   *This generates a `.env` file in the root directory with version tags and user permissions.*
 
 ## Contributing
 
@@ -123,7 +109,8 @@ Branches are named with the following convention: `type/distro/description-issue
 ### Quality Control
 
 - **Workspace Protection**: Automated via `pre-commit` hooks. Ensure you run `make lint` before pushing.
->[!IMPORTANT] ***It is reccommended that you commit from inside the container or installing `pre-commit` locally***
+>[!NOTE]
+> ***It is reccommended that you commit from inside the container or installing `pre-commit` locally***
 
 ## Troubleshooting
 
