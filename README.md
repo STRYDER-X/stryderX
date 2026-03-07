@@ -3,7 +3,8 @@
 ![ROS 2](https://img.shields.io/badge/ROS%202-Humble-blue)
 [![License](https://img.shields.io/badge/license-GNU%20GPL-blue.svg)](LICENSE)
 
-**StryderX** is a modular RC robot platform designed for both autonomous and manual navigation. This repository serves as the main workspace, integrating hardware abstraction layers, simulation environments, and high-level control logic.
+**StryderX** is a modular RC robot platform designed for both autonomous and manual navigation. This repository serves as the main workspace,
+integrating hardware abstraction layers, simulation environments, and high-level control logic.
 
 ## Key Features
 
@@ -14,7 +15,7 @@
 
 ## System Architecture
 
-Following the **Two-Layer Hardware Interface**:
+I built the project using a **Two-Layer Hardware Interface** to ensure portablitiy:
 
 1. **Low-Level Drivers**: Pure C++/Python libraries with zero middleware dependencies.
 2. **High-Level Wrappers**: ROS 2 nodes that bridge the libraries into the ROS ecosystem.
@@ -22,7 +23,7 @@ Following the **Two-Layer Hardware Interface**:
 ### Key Modules
 
 - **`stryderx_hardware`**: The Hardware Abstraction Layer (HAL).
-- **`stryderx_docker`**: Infrastructure as Code (IaC).
+- **`stryderx_docker`**: Docker environment; easily deployable.
 
 ### Prerequisites
 
@@ -51,9 +52,9 @@ Following the **Two-Layer Hardware Interface**:
    pre-commit install
    ```
 
-3. **Build & Launch**
+3. **Launch & Build**
 
-    Start the Docker stack and enter the container:
+    Start the Docker environment and run the full pipleine to build and compile code.
 
     ```bash
     # Start Docker enironment
@@ -81,8 +82,9 @@ Following the **Two-Layer Hardware Interface**:
 > This project is currently a **Work in Progress**. While new feature are being implemented,
 > you can run the core camera server node to verify that the hardware interface.
 
-### Running Hardware Nodes
-To launch the hardware abstraction layer (e.g., the camera server):
+### Testing the Camera Server
+
+To start the hardware abstraction layer (e.g., the camera server):
 
 ```bash
 # Source the workspace
@@ -93,7 +95,8 @@ ros2 run stryderx_hardware camera_server_node
 
 ## Contributing
 
-Contribution are welcomed! To maintain a standard of code quiality and compatibility, please adhere to the following guidelines.
+Contribution are welcomed! To keep the code base somewhat clean and compatible across different ROS versions, please adhere
+to the following guidelines.
 
 ### Git & Branching Strategy
 
@@ -111,11 +114,12 @@ Branches are named with the following convention: `type/distro/description-issue
 
 - **Workspace Protection**: Automated via `pre-commit` hooks. Ensure you run `make lint` before pushing.
 > [!IMPORTANT]
-> ***It is recommended that you commit from inside the container or installing `pre-commit` locally***
+> ***To ensure these checks run correctly, I recommended that you commit from inside the container or installing `pre-commit` locally***
 
-## Troubleshooting
+## Git Authentication in Containers
 
-The development container does not include SSH keys. More than likely when trying to push changes, **when inside the contianer**, to the remote repo errors will occur. To fix this you should updated the remote URL to HTTPS.
+The development container does not include SSH keys. More than likely when trying to push changes, **when inside the contianer**,
+to the remote repo complian about some errors. To fix this you should updated the remote URL to HTTPS.
 ```bash
 # Update remote URL to HTTPS
 git remote set-url https://github.com/STRYDER-X/stryderX.git
@@ -124,7 +128,8 @@ git remote set-url https://github.com/STRYDER-X/stryderX.git
 git remote -v
 ```
 
-For submodules, run `git submodule sync` after updating the main repository's remote.
+> [!NOTE:]
+> For the submodules, run `git submodule sync` after updating the main repository's remote.
 
 ## License
 
