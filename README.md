@@ -124,10 +124,6 @@ git remote -v
 > [!NOTE:]
 > For the submodules, run `git submodule sync` after updating the main repository's remote.
 
-## License
-
-This project is licensed under the [GNU General Public License v3.0](LICENSE).
-
 ## Author & Maintainer
 
 - **Julian A. Rendon**
