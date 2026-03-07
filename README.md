@@ -71,8 +71,8 @@ Following the **Two-Layer Hardware Interface**:
     make gate
     ```
     This will run the full pipeline: Setup -> Lint -> Build -> Test -> Report
-    > [!NOTE]
-    > To see the full list of targets and their descriptions you can simple run `make`.
+> [!NOTE]
+> To see the full list of targets and their descriptions you can simple run `make`.
 
 ## Usage
 
