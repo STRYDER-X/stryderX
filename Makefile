@@ -34,7 +34,7 @@ help: ## Show this help message
 	@echo -e "\n\033[33m(Host Only):\033[0m"
 	@grep -E '^(up|down|shell|clean):.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
 	@echo -e "\n\033[33m(Dispatched to Packages):\033[0m"
-	@grep -E '^(build|test|lint|report|check|view|purge):.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^(build|test|lint|report|check|view|docs|purge):.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
 up: ## [Host] Start the robot container
 	$(call HOST_ONLY, cd $(DOCKER_DIR) && docker compose up -d --build)
@@ -51,12 +51,15 @@ clean: ## [Host] Nuclear clean: stop container and prune volumes
 build: ## Build ROS 2 workspace
 	@$(EXEC) "source /opt/ros/humble/setup.bash && colcon build --symlink-install"
 
-lint: ## Dispatch linting to each submodule
+lint: ## Tell every package to lint itself using its own rules
 	@for path in $(PKG_PATHS_TO_LINT); do \
-		relative_path=$${path#$(ROOT_DIR)/}; \
 		if [ -f $$path/Makefile ]; then \
-			echo -e "\033[32m--> Dispatching lint to: $$relative_path\033[0m"; \
+			relative_path=$${path#$(ROOT_DIR)/}; \
+			echo -e "\033[32m--> Executing internal lint for: $$relative_path\033[0m"; \
 			$(EXEC) "make -C $$relative_path lint"; \
+		else \
+			relative_path=$${path#$(ROOT_DIR)/}; \
+			echo -e "\033[33m[Skip]\033[0m No Makefile found in $$relative_path."; \
 		fi; \
 	done
 
@@ -74,6 +77,15 @@ view: ## View the latest test report
 	@cat $(REPORT_PATH) || echo "No report found. Run 'make report' first."
 
 check: lint build test report ## Full Pipeline: Lint -> Build -> Test -> Report
+
+docs: ## Generate documentation for all packages
+	@for path in $(PKG_PATHS_TO_LINT); do \
+		if [ -f $$path/Makefile ]; then \
+			relative_path=$${path#$(ROOT_DIR)/}; \
+			echo -e "\033[32m--> Generating Docs for: $$relative_path\033[0m"; \
+			$(EXEC) "make -C $$relative_path docs"; \
+		fi; \
+	done
 
 purge: ## Remove build/install/log folders
 	@echo "Purging ROS 2 artifacts..."
