@@ -6,13 +6,6 @@
 **StryderX** is a modular RC robot platform designed for both autonomous and manual navigation. This repository serves as the main workspace,
 integrating hardware abstraction layers, simulation environments, and high-level control logic.
 
-## Key Features
-
-*   **Modular Architecture**: Decoupled hardware abstraction, control, and perception layers.
-*   **Hardware Abstraction Layer (HAL)**: Robust interface for sensors and actuators, including a high-performance Camera Server.
-*   **Dockerized Workflow**: Full containerization support for consistent development and deployment across different machines.
-*   **ROS 2 Native**: Built on ROS 2 (Humble) for real-time communication and introspection.
-
 ## System Architecture
 
 I built the project using a **Two-Layer Hardware Interface** to ensure portablitiy:
