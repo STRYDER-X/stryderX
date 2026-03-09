@@ -37,7 +37,7 @@ echo "---------------------------------------"
 echo "🌿  Branch:       $GIT_BRANCH"
 echo "🔧  ROS Distro:   $ROS_DISTRO"
 echo "🔗  Commit:       $GIT_COMMIT"
-echo "🏷️   Image Tag:    $TAG"
+echo "🏷️  Image Tag:    $TAG"
 echo "---------------------------------------"
 
 cat <<EOF > "$TOP_LVL_DIR"/.env
