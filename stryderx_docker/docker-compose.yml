@@ -18,8 +18,10 @@ services:
       - /dev/bus/usb:/dev/bus/usb # Required for camera controls like exposure/autofocus
     group_add:
       - video
+      - dialout
     devices:
       - "/dev/video0:/dev/video0"
+      - "/dev/ttyUSB0:/dev/myserial"
     tty: true
     stdin_open: true
     command: /bin/bash
