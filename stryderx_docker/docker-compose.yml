@@ -16,7 +16,7 @@ services:
     volumes:
       - ../:/home/rpi/stryderx/ # Base Image robot-base-docker username is RPi.
       - /dev/bus/usb:/dev/bus/usb # Required for camera controls like exposure/autofocus
-      - stryderx_precommit_cache:/home/rpi/.cache/pre-commit  # Cache for pre-commit hooks
+      - precommit_cache:/home/rpi/.cache/pre-commit  # Cache for pre-commit hooks
     group_add:
       - video
       - dialout
@@ -29,4 +29,4 @@ services:
     network_mode: host
 
 volumes:
-  stryderx_precommit_cache:
+  precommit_cache:

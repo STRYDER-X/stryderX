@@ -4,7 +4,8 @@ FROM jrendon514/robot-base-docker:humble-v0.2.0
 USER root
 
 # Workspace for StryderX ROS2 packages
-RUN mkdir -p /home/rpi/stryderx && chown -R rpi:rpi /home/rpi/stryderx
+RUN mkdir -p /home/rpi/stryderx /home/rpi/.cache/pre-commit && \
+chown -R rpi:rpi /home/rpi/stryderx /home/rpi/.cache
 
 RUN wget -qO /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-arm64 && \
 chmod a+x /usr/local/bin/hadolint
