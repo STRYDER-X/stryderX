@@ -47,6 +47,7 @@ BUILD_DATE=$DATE
 ROS_DISTRO=$ROS_DISTRO
 USER_UID=$(id -u 2>/dev/null || echo 1000)
 USER_GID=$(id -g 2>/dev/null || echo 1000)
+INPUT_GID=$(getent group input | cut -d: -f3 2>/dev/null || echo 995)
 EOF
 
 echo "✅ Environment configured in .env file."

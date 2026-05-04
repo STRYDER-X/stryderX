@@ -20,9 +20,11 @@ services:
     group_add:
       - video
       - dialout
+      - "${INPUT_GID:-995}"
     devices:
-      - "/dev/video0:/dev/video0"
-      - "/dev/ttyUSB0:/dev/myserial"
+    # - "/dev/video0:/dev/video0"
+    # - "/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0:/dev/myserial"
+    - "/dev/input:/dev/input"
     tty: true
     stdin_open: true
     command: /bin/bash
