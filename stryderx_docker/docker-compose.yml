@@ -1,6 +1,6 @@
 name: stryderx
 services:
-  stryderx:
+  stryderx-core:
     build:
       context: ..
       dockerfile: stryderx_docker/Dockerfile.dev
@@ -12,23 +12,33 @@ services:
         - USER_UID=${UID:-1000}
         - USER_GID=${GID:-1000}
     image: stryderx:${APP_VERSION:-dev}
-    container_name: stryderx-robot
+    container_name: stryderx-core
+    network_mode: host
+    tty: true
+    stdin_open: true
     volumes:
       - ../:/home/rpi/stryderx/ # Base Image robot-base-docker username is RPi.
-      - /dev/bus/usb:/dev/bus/usb # Required for camera controls like exposure/autofocus
       - precommit_cache:/home/rpi/.cache/pre-commit  # Cache for pre-commit hooks
+    command: /bin/bash
+
+  stryderx-robot:
+    extends: stryderx-core
+    container_name: stryderx-robot
+    profiles:
+      - hardware
+    volumes:
+      - /dev/bus/usb:/dev/bus/usb # Required for camera controls like exposure/autofocus
+      - /dev/input:/dev/input
     group_add:
       - video
       - dialout
       - "${INPUT_GID:-995}"
+    device_cgroup_rules:
+      - "c 13:* rmw"
+      - "c 189:* rmw"
     devices:
-    # - "/dev/video0:/dev/video0"
-    # - "/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0:/dev/myserial"
-    - "/dev/input:/dev/input"
-    tty: true
-    stdin_open: true
-    command: /bin/bash
-    network_mode: host
+    - "/dev/video0:/dev/video0"
+    - "/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0:/dev/myserial"
 
 volumes:
   precommit_cache:

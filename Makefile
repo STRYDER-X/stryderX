@@ -1,7 +1,8 @@
 .DEFAULT_GOAL := help
 SHELL := /bin/bash
 
-DOCKER_SERVICE := stryderx
+DOCKER_SERVICE := stryderx-core
+DOCKER_HARDWARE_SERVICE := stryderx-robot
 ROOT_DIR       := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 DOCKER_DIR     := $(ROOT_DIR)/stryderx_docker
 LOG_DIR        := $(ROOT_DIR)/log
@@ -20,7 +21,7 @@ else
     CONTEXT := \033[34mHost System\033[0m
 endif
 
-.PHONY: help up down shell build test lint report gate view docs setup purge clean
+.PHONY: help up hardware down shell build test lint report gate view docs setup purge clean
 
 help: ## Show this help message
 	@echo -e "Context: $(CONTEXT)"
@@ -30,17 +31,31 @@ help: ## Show this help message
 env: ## [Host] Generate .env file
 	$(call HOST_ONLY, $(DOCKER_DIR)/scripts/generate_env.sh)
 
-up: env ## [Host] Start the robot container
-	$(call HOST_ONLY, cd $(DOCKER_DIR) && docker compose up -d --build)
+up: env ## [Host] Start core container; use `make up hardware` for robot hardware
+ifeq ($(filter hardware,$(MAKECMDGOALS)),hardware)
+	$(call HOST_ONLY, cd $(DOCKER_DIR) && docker compose --profile hardware up -d --build $(DOCKER_HARDWARE_SERVICE))
+else
+	$(call HOST_ONLY, cd $(DOCKER_DIR) && docker compose up -d --build $(DOCKER_SERVICE))
+endif
 
-down: ## [Host] Stop the container
-	$(call HOST_ONLY, cd $(DOCKER_DIR) && docker compose down)
+hardware:
+	@:
 
-shell: ## [Host] Open interactive shell
+down: ## [Host] Stop containers
+	$(call HOST_ONLY, cd $(DOCKER_DIR) && docker compose --profile hardware down --remove-orphans)
+
+shell: ## [Host] Open core shell; use `make shell hardware` for robot hardware
+ifeq ($(filter hardware,$(MAKECMDGOALS)),hardware)
+	$(call HOST_ONLY, cd $(DOCKER_DIR) && docker compose exec $(DOCKER_HARDWARE_SERVICE) /bin/bash)
+else
 	$(call HOST_ONLY, cd $(DOCKER_DIR) && docker compose exec $(DOCKER_SERVICE) /bin/bash)
+endif
 
-clean: ## [Host] Stop container and prune volumes
-	$(call HOST_ONLY, $(MAKE) down && docker system prune -af --volumes)
+clean: ## [Host] Remove StryderX containers and prune volumes
+	$(call HOST_ONLY, cd $(DOCKER_DIR) && containers=$$(docker compose --profile hardware ps -aq); \
+		if [ -n "$$containers" ]; then docker rm -f $$containers; fi; \
+		docker compose --profile hardware down --remove-orphans --volumes; \
+		docker system prune -af --volumes)
 
 setup: ## Initialize git hooks in root and submodules
 	@$(EXEC) "$(DOCKER_DIR)/scripts/setup_pre_commit.sh"

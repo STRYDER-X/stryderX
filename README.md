@@ -3,128 +3,189 @@
 ![ROS 2](https://img.shields.io/badge/ROS%202-Humble-blue)
 [![License](https://img.shields.io/badge/license-GNU%20GPL-blue.svg)](LICENSE)
 
-**StryderX** is a modular RC robot platform designed for both autonomous and manual navigation. This repository serves as the main workspace,
-integrating hardware abstraction layers, simulation environments, and high-level control logic.
+**StryderX** is a ROS 2 Humble workspace for an RC robot platform. The repo brings together the robot hardware package, third-party low-level drivers, and a Docker-based development/runtime environment for running the stack on the robot or on a development machine.
 
-## System Architecture
+## Project Layout
 
-I built the project using a **Two-Layer Hardware Interface** to ensure portablitiy:
+- `src/stryderx_hardware`: ROS 2 hardware abstraction package.
+- `src/stryderx_hardware/third_party`: Driver libraries used by the hardware package.
+- `stryderx_docker`: Docker image, Compose services, and environment setup scripts.
+- `Makefile`: Main entry point for building, testing, and starting containers.
 
-1. **Low-Level Drivers**: Pure C++/Python libraries with zero middleware dependencies.
-2. **High-Level Wrappers**: ROS 2 nodes that bridge the libraries into the ROS ecosystem.
+## Architecture
 
-### Key Modules
+StryderX uses a two-layer hardware interface:
 
-- **`stryderx_hardware`**: The Hardware Abstraction Layer (HAL).
-- **`stryderx_docker`**: Docker environment; easily deployable.
+1. **Low-level drivers** are plain C++ or Python libraries with no ROS middleware dependency.
+2. **ROS 2 wrappers** expose those drivers as nodes, topics, and services.
 
-### Prerequisites
+Current robot-facing nodes include:
 
-- **Docker Enginer** (20.10+) & **Docker Compose V2**
-- **GNU Make**
-- **pre-commit**: (Recommended) Install locally via pip install pre-commit to ensure hooks run during host-side commits.
-- **Hardware**: Raspberry Pi 4B (Optimized) or standard x86/ARM64 Linux
+- `camera_server_node`: Camera stream and luminosity service interface.
+- `drive_controller`: Joystick throttle control.
+- `steering_controller`: Joystick steering control.
+- `joy_node`: ROS 2 joystick input node from `ros-humble-joy`.
+
+## Requirements
+
+- Docker Engine 20.10+ with Docker Compose V2.
+- GNU Make.
+- Git with submodule support.
+- Optional: `pre-commit` on the host for local commit hooks.
+- Robot hardware: Linux host such as Raspberry Pi 4B, USB camera, USB serial controller, and joystick input device.
 
 ## Quick Start
 
-1. **Clone the Repository**
-
-   Clone recursively to ensure all submodules are initialized. Then enter the worksapce.
-   ```bash
-   git clone --recursive https://github.com/jrendon102/stryderX.git .
-   cd stryderX
-   ```
-
-2. **Initialize Environment**
-
-   Generate the local `.env` file:
-   ```bash
-   make env
-
-   # Installs hooks locally if pre-commit is on host
-   pre-commit install
-   ```
-
-3. **Launch & Build**
-
-    Start the Docker environment and run the full pipleine to build and compile code.
-
-    ```bash
-    # Start Docker enironment
-    make up
-    ```
-
-    ```bash
-    # Enter the shell and source
-    make shell
-    ```
-
-    Once inside container you should be placed inside the `stryderx` workspace.
-    From there you can runthe following command to start the entire build process:
-    ```bash
-    make gate
-    ```
-    This will run the full pipeline: Setup -> Lint -> Build -> Test -> Report
-
-> [!NOTE]
-> To see the full list of targets and their descriptions you can simple run `make`.
-
-## Usage
-
-> [!NOTE]
-> This project is currently a **Work in Progress**. While new feature are being implemented,
-> you can run the core camera server node to verify that the hardware interface.
-
-### Testing the Camera Server
-
-To start the hardware abstraction layer (e.g., the camera server):
+Clone the workspace with submodules:
 
 ```bash
-# Source the workspace
-source install/setup.bash
+git clone --recursive https://github.com/jrendon102/stryderX.git
+cd stryderX
+```
 
+Generate the local Docker environment file:
+
+```bash
+make env
+```
+
+Start the development container:
+
+```bash
+make up
+make shell
+```
+
+Inside the container, build and verify the workspace:
+
+```bash
+make gate
+```
+
+`make gate` runs setup, lint, build, test, and report generation.
+
+## Start The Robot
+
+Use the hardware profile when running on the robot host. This profile adds camera, USB serial, and `/dev/input/eventX` access for ROS joystick input.
+
+From the host:
+
+```bash
+make up hardware
+make shell hardware
+```
+
+Inside the hardware container:
+
+```bash
+make build
+source install/setup.bash
+```
+
+Start joystick input in one shell:
+
+```bash
+ros2 run joy joy_node
+```
+
+Start the drive and steering controllers in separate shells:
+
+```bash
+ros2 run stryderx_hardware drive_controller
+```
+
+```bash
+ros2 run stryderx_hardware steering_controller
+```
+
+Start the camera server when camera streaming is needed:
+
+```bash
 ros2 run stryderx_hardware camera_server_node
 ```
 
-## Contributing
+The hardware container expects these host devices:
 
-Contribution are welcomed! To keep the code base somewhat clean and compatible across different ROS versions, please adhere
-to the following guidelines.
+- `/dev/video0` for the camera.
+- `/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0` for the serial controller, mapped to `/dev/myserial`.
+- `/dev/input/eventX` devices for joystick input, mounted through `/dev/input`.
 
-### Git & Branching Strategy
+## Common Commands
 
-To keep things organized and ensure long-term compatabilitiy, I used **Distro Silos** for ROS 2 versions
-(like hunble, jazzy, iron). This helps isolate changes for specific ROS 2 distributions.
-
-### Branch Naming Convention:
-
-Branches are named with the following convention: `type/distro/description-issue#`
-
-- **Types**: `feat/`, `fix`, `refactor`, `doc`, `test`.
-- **Example**: `feat/humble/camera-server-logic-102`.
-
-### Quality Control
-
-- **Workspace Protection**: Automated via `pre-commit` hooks. Ensure you run `make lint` before pushing.
-> [!IMPORTANT]
-> ***To ensure these checks run correctly, I recommended that you commit from inside the container or installing `pre-commit` locally***
-
-## Git Authentication in Containers
-
-The development container does not include SSH keys. More than likely when trying to push changes, **when inside the contianer**,
-to the remote repo complian about some errors. To fix this you should updated the remote URL to HTTPS.
 ```bash
-# Update remote URL to HTTPS
-git remote set-url https://github.com/STRYDER-X/stryderX.git
+make help
+make env
+make up
+make up hardware
+make shell
+make shell hardware
+make build
+make lint
+make test
+make report
+make down
+```
 
-# Verify the change
+## Camera Server
+
+After building and sourcing the workspace, run:
+
+```bash
+ros2 run stryderx_hardware camera_server_node
+```
+
+Main interfaces:
+
+| Interface | Type | Description |
+| :--- | :--- | :--- |
+| `~/camera/image/compressed` | `sensor_msgs/msg/CompressedImage` | Compressed camera stream. |
+| `~/luminosity_value` | `std_msgs/msg/Float32` | Current light level. |
+| `~/start_streaming` | `std_srvs/srv/Trigger` | Starts or resumes streaming. |
+| `~/pause_streaming` | `std_srvs/srv/Trigger` | Pauses streaming. |
+| `~/shutdown_server` | `std_srvs/srv/Trigger` | Releases camera hardware and stops the server. |
+
+## Development
+
+Install hooks if `pre-commit` is available on the host:
+
+```bash
+pre-commit install
+```
+
+Run the normal quality gate before pushing:
+
+```bash
+make gate
+```
+
+Branches should follow:
+
+```text
+type/distro/description-issue#
+```
+
+Example:
+
+```text
+feat/humble/camera-server-logic-102
+```
+
+## Git Authentication In Containers
+
+The development container does not include your host SSH keys. If pushing from inside the container, use an HTTPS remote:
+
+```bash
+git remote set-url origin https://github.com/STRYDER-X/stryderX.git
 git remote -v
 ```
 
-> [!NOTE:]
-> For the submodules, run `git submodule sync` after updating the main repository's remote.
+For submodules, sync URLs after changing the main remote:
 
-## Author & Maintainer
+```bash
+git submodule sync --recursive
+```
 
-- **Julian A. Rendon**
-- Email: julianrendon514@gmail.com
+## Author
+
+- Julian A. Rendon
+- julianrendon514@gmail.com
