@@ -1,3 +1,6 @@
 [submodule "src/stryderx_hardware"]
 	path = src/stryderx_hardware
-	url = git@github.com:STRYDER-X/stryderx_hardware.git
+	url = ../stryderx_hardware.git
+	branch = main
+	fetchRecurseSubmodules = true
+	ignore = dirty
