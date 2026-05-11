@@ -18,7 +18,7 @@ services:
     stdin_open: true
     volumes:
       - ../:/home/rpi/stryderx/ # Base Image robot-base-docker username is RPi.
-      - precommit_cache:/home/rpi/.cache/pre-commit  # Cache for pre-commit hooks
+      - precommit_cache:/home/rpi/.cache/pre-commit # Cache for pre-commit hooks
     command: /bin/bash
 
   stryderx-robot:
@@ -37,8 +37,8 @@ services:
       - "c 13:* rmw"
       - "c 189:* rmw"
     devices:
-    - "/dev/video0:/dev/video0"
-    - "/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0:/dev/myserial"
+      - "/dev/video0:/dev/video0"
+      - "/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0:/dev/myserial"
 
 volumes:
   precommit_cache:

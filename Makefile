@@ -16,7 +16,11 @@ ifeq ($(INSIDE_CONTAINER), true)
     HOST_ONLY = @echo -e "\033[31m[Error]\033[0m Target '$@' is Host-Only." && exit 1
     CONTEXT := \033[32mInside Container\033[0m
 else
-    EXEC := cd $(DOCKER_DIR) && docker compose exec $(DOCKER_SERVICE) /bin/bash -c
+    ifeq ($(filter hardware,$(MAKECMDGOALS)),hardware)
+        EXEC := cd $(DOCKER_DIR) && docker compose --profile hardware exec $(DOCKER_HARDWARE_SERVICE) /bin/bash -c
+    else
+        EXEC := cd $(DOCKER_DIR) && docker compose exec $(DOCKER_SERVICE) /bin/bash -c
+    endif
     HOST_ONLY = $(1)
     CONTEXT := \033[34mHost System\033[0m
 endif
@@ -72,7 +76,7 @@ lint: ## Run pre-commit on root and submodules
 	done
 
 test: ## Run ROS 2 tests (excludes linters)
-	-@$(EXEC) "source /opt/ros/humble/setup.bash && [ -f install/setup.bash ] && source install/setup.bash; \
+	@$(EXEC) "source /opt/ros/humble/setup.bash && [ -f install/setup.bash ] && source install/setup.bash; \
 	colcon test --event-handlers console_cohesion+ --ctest-args -E 'lint_cmake|uncrustify|cppcheck|copyright'"
 
 report: ## Save test results to log/
