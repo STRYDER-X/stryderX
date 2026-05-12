@@ -11,6 +11,9 @@ REPORT_PATH    := $(LOG_DIR)/$(REPORT_FILE)
 
 INSIDE_CONTAINER := $(shell [ -f /.dockerenv ] && echo "true" || echo "false")
 
+# List of packages that support Doxygen 'docs' target
+DOC_PACKAGES := stryderx_hardware
+
 ifeq ($(INSIDE_CONTAINER), true)
     EXEC := /bin/bash -c
     HOST_ONLY = @echo -e "\033[31m[Error]\033[0m Target '$@' is Host-Only." && exit 1
@@ -72,7 +75,7 @@ lint: ## Run pre-commit on root and submodules
 		-not -path "*/build/*" -not -path "*/install/*" | while read -r config; do \
 		dir=$$(dirname $$config); \
 		echo -e "\033[34m--> Linting: $$dir\033[0m"; \
-		$(EXEC) "cd $$dir && pre-commit run --all-files"; \
+		$(EXEC) "source /opt/ros/humble/setup.bash && cd $$dir && pre-commit run --all-files"; \
 	done
 
 test: ## Run ROS 2 tests (excludes linters)
@@ -88,8 +91,8 @@ report: ## Save test results to log/
 view: ## View latest test report
 	@cat $(REPORT_PATH) || echo "No report found."
 
-docs: ## Generate Doxygen for all packages
-	@$(EXEC) "source /opt/ros/humble/setup.bash && colcon build --cmake-target docs"
+docs: ## Generate Doxygen for selected packages
+	@$(EXEC) "source /opt/ros/humble/setup.bash && colcon build --packages-select $(DOC_PACKAGES) --cmake-target docs"
 
 gate: setup lint build test report ## Full pipeline: Setup -> Lint -> Build -> Test -> Report
 
