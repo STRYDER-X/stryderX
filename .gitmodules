@@ -4,3 +4,8 @@
 	branch = main
 	fetchRecurseSubmodules = true
 	ignore = dirty
+[submodule "src/stryderx_bringup"]
+	path = src/stryderx_bringup
+	url = ../stryderx_bringup.git
+	branch = main
+	ignore = dirty
