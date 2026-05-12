@@ -35,7 +35,10 @@ __pycache__/
 *.bak
 *~
 # Ignore logs created by ROS 2 launch or rosbag
-.ros/
+rosbag2*/
+*.mcap
+*.db3
+metadata.yaml
 
 # Documentation
 **/docs/html/
