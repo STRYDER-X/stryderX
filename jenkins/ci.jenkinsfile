@@ -7,8 +7,29 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
-                echo "Repository pulled successfully!"
-                sh "ls -la"
+            }
+        }
+
+        stage('Start Docker Container') {
+            steps {
+                dir('stryderx_docker') {
+                    sh 'make up'
+                }
+            }
+        }
+
+        stage('Verify Docker Container running') {
+            steps {
+                sh 'pwd'
+                sh 'docker container ls -a'
+            }
+        }
+    }
+
+    post {
+        always {
+            dir('stryderx_docker') {
+                sh 'make down'
             }
         }
     }
