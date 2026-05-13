@@ -9,11 +9,13 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            checkout scm: [
+            steps {
+                checkout scm: [
                 $class: 'GitSCM',
                 branches: scm.branches,
                 extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'stryderx']]
-            ]
+                ]
+            }
         }
 
         stage('Setup Container') {
