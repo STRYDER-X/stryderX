@@ -9,17 +9,19 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            steps {
-                sh "mkdir -p stryderx"
-                sh 'ls -ln && pwd'
-                checkout scm
-            }
+            checkout scm: [
+                $class: 'GitSCM',
+                branches: scm.branches,
+                extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'stryderx']]
+            ]
         }
 
         stage('Setup Container') {
             steps {
-                sh 'ls -ln && pwd'
-                sh 'make up ALLOW_HOST_CMDS=true'
+                dir('stryderx') {
+                    sh 'ls -ln && pwd'
+                    sh 'make up ALLOW_HOST_CMDS=true'
+                }
             }
         }
 
@@ -33,8 +35,10 @@ pipeline {
 
     post {
         always {
-            sh 'make down ALLOW_HOST_CMDS=true'
-            sh 'make clean ALLOW_HOST_CMDS=true'
+            dir('stryderx') {
+                sh 'make down ALLOW_HOST_CMDS=true'
+                sh 'make clean ALLOW_HOST_CMDS=true'
+            }
         }
     }
 }
