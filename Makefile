@@ -59,11 +59,10 @@ else
 	$(call HOST_ONLY, cd $(DOCKER_DIR) && docker compose exec $(DOCKER_SERVICE) /bin/bash)
 endif
 
-clean: ## [Host] Remove StryderX containers and prune volumes
+clean: ## [Host] Remove only StryderX containers and Compose-managed volumes
 	$(call HOST_ONLY, cd $(DOCKER_DIR) && containers=$$(docker compose --profile hardware ps -aq); \
 		if [ -n "$$containers" ]; then docker rm -f $$containers; fi; \
-		docker compose --profile hardware down --remove-orphans --volumes; \
-		docker system prune -af --volumes)
+		docker compose --profile hardware down --remove-orphans --volumes)
 
 setup: ## Initialize git hooks in root and submodules
 	@$(EXEC) "$(DOCKER_DIR)/scripts/setup_pre_commit.sh"

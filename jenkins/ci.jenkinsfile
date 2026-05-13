@@ -13,15 +13,12 @@ pipeline {
         
         stage('Start Docker Container') {
             steps {
-                    sh 'pwd'
-                    sh 'ls -ln'
                     sh 'make up ALLOW_HOST_CMDS=true'
             }
         }
 
         stage('Verify Docker Container running') {
             steps {
-                sh 'pwd'
                 sh 'docker container ls -a'
             }
         }
@@ -30,6 +27,7 @@ pipeline {
     post {
         always {
             sh 'make down ALLOW_HOST_CMDS=true'
+            sh 'make clean ALLOW_HOST_CMDS=true'
         }
     }
 }
