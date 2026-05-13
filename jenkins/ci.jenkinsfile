@@ -10,11 +10,9 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm: [
-                $class: 'GitSCM',
-                branches: scm.branches,
-                extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'stryderx']]
-                ]
+                dir('stryderx') {
+                    checkout scm
+                }
             }
         }
 
