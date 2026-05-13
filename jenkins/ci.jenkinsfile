@@ -6,17 +6,16 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                sh 'pwd'
                 checkout scm
             }
         }
         
         stage('Start Docker Container') {
             steps {
-                dir('stryderx_docker') {
                     sh 'pwd'
                     sh 'ls -ln'
                     sh 'make up'
-                }
             }
         }
 
@@ -30,9 +29,7 @@ pipeline {
 
     post {
         always {
-            dir('stryderx_docker') {
-                sh 'make down'
-            }
+            sh 'make down'
         }
     }
 }
