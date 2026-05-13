@@ -3,6 +3,10 @@ pipeline {
         label 'StryderX-Core'
     }
 
+    parameters {
+        string(name: 'CONTAINER_NAME', defaultValue: 'stryderx-core', description: 'Name of StryderX container.')
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -11,15 +15,16 @@ pipeline {
             }
         }
         
-        stage('Start Docker Container') {
+        stage('Environment Setup') {
             steps {
-                    sh 'make up ALLOW_HOST_CMDS=true'
+                sh 'make env ALLOW_HOST_CMDS=true'
+                sh 'make up ALLOW_HOST_CMDS=true'
             }
         }
 
-        stage('Verify Docker Container running') {
+        stage('CI Gate') {
             steps {
-                sh 'docker container ls -a'
+                sh 'docker exec ${prams.CONTAINER_NAME} make gate ALL'
             }
         }
     }
