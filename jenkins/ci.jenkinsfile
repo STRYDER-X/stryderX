@@ -23,7 +23,7 @@ pipeline {
 
         stage('CI Gate') {
             steps {
-                sh "docker exec ${params.CONTAINER_NAME} pwd && ls -ln && make help"
+                sh "docker exec ${params.CONTAINER_NAME} make gate"
             }
         }
     }
