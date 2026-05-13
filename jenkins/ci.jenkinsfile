@@ -1,0 +1,17 @@
+pipeline {
+    agent any
+
+    stages {
+        label: 'StryderX-Core'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+                echo "Repository pulled successfully!"
+                sh "ls -la"
+            }
+        }
+    }
+}
