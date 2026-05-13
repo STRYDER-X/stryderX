@@ -10,11 +10,12 @@ REPORT_FILE    := test_report.log
 REPORT_PATH    := $(LOG_DIR)/$(REPORT_FILE)
 
 INSIDE_CONTAINER := $(shell [ -f /.dockerenv ] && echo "true" || echo "false")
+ALLOW_HOST_CMDS ?= false
 
 # List of packages that support Doxygen 'docs' target
 DOC_PACKAGES := stryderx_hardware
 
-ifeq ($(INSIDE_CONTAINER), true)
+ifeq ($(and $(filter true,$(INSIDE_CONTAINER)),$(filter-out true,$(ALLOW_HOST_CMDS))),true)
     EXEC := /bin/bash -c
     HOST_ONLY = @echo -e "\033[31m[Error]\033[0m Target '$@' is Host-Only." && exit 1
     CONTEXT := \033[32mInside Container\033[0m
