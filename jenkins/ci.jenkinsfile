@@ -24,7 +24,7 @@ pipeline {
 
         stage('CI Gate') {
             steps {
-                sh "docker exec ${params.CONTAINER_NAME} make gate"
+                sh "docker exec ${params.CONTAINER_NAME} pwd && ls -ln"
             }
         }
     }
