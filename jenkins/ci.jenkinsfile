@@ -15,7 +15,7 @@ pipeline {
             steps {
                     sh 'pwd'
                     sh 'ls -ln'
-                    sh 'make up'
+                    sh 'make up ALLOW_HOST_CMDS=true'
             }
         }
 
@@ -29,7 +29,7 @@ pipeline {
 
     post {
         always {
-            sh 'make down'
+            sh 'make down ALLOW_HOST_CMDS=true'
         }
     }
 }
