@@ -10,20 +10,27 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                sh "mkdir -p stryderx"
+                dir('stryderx') {
+                    sh 'ls -ln && pwd'
+                    checkout scm
+                }
             }
         }
 
         stage('Environment Setup') {
             steps {
-                sh 'make env ALLOW_HOST_CMDS=true'
-                sh 'make up ALLOW_HOST_CMDS=true'
+                dir('stryderx') {
+                    sh 'ls -ln && pwd'
+                    sh 'make env ALLOW_HOST_CMDS=true'
+                    sh 'make up ALLOW_HOST_CMDS=true'
+                }
             }
         }
 
         stage('CI Gate') {
             steps {
-                sh "docker exec ${params.CONTAINER_NAME} make gate"
+                sh "docker exec ${params.CONTAINER_NAME} make help && make gate"
             }
         }
     }
