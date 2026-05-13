@@ -15,10 +15,20 @@ ALLOW_HOST_CMDS ?= false
 # List of packages that support Doxygen 'docs' target
 DOC_PACKAGES := stryderx_hardware
 
-ifeq ($(and $(filter true,$(INSIDE_CONTAINER)),$(filter-out true,$(ALLOW_HOST_CMDS))),true)
-    EXEC := /bin/bash -c
-    HOST_ONLY = @echo -e "\033[31m[Error]\033[0m Target '$@' is Host-Only." && exit 1
-    CONTEXT := \033[32mInside Container\033[0m
+ifeq ($(filter true,$(INSIDE_CONTAINER)),true)
+    ifeq ($(filter-out true,$(ALLOW_HOST_CMDS)),)
+        ifeq ($(filter hardware,$(MAKECMDGOALS)),hardware)
+            EXEC := cd $(DOCKER_DIR) && docker compose --profile hardware exec $(DOCKER_HARDWARE_SERVICE) /bin/bash -c
+        else
+            EXEC := cd $(DOCKER_DIR) && docker compose exec $(DOCKER_SERVICE) /bin/bash -c
+        endif
+        HOST_ONLY = $(1)
+        CONTEXT := \033[34mHost System\033[0m
+    else
+        EXEC := /bin/bash -c
+        HOST_ONLY = @echo -e "\033[31m[Error]\033[0m Target '$@' is Host-Only." && exit 1
+        CONTEXT := \033[32mInside Container\033[0m
+    endif
 else
     ifeq ($(filter hardware,$(MAKECMDGOALS)),hardware)
         EXEC := cd $(DOCKER_DIR) && docker compose --profile hardware exec $(DOCKER_HARDWARE_SERVICE) /bin/bash -c

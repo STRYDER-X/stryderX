@@ -10,11 +10,10 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                sh 'pwd'
                 checkout scm
             }
         }
-        
+
         stage('Environment Setup') {
             steps {
                 sh 'make env ALLOW_HOST_CMDS=true'
