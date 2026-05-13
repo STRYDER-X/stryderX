@@ -9,10 +9,12 @@ pipeline {
                 checkout scm
             }
         }
-
+        
         stage('Start Docker Container') {
             steps {
                 dir('stryderx_docker') {
+                    sh 'pwd'
+                    sh 'ls -ln'
                     sh 'make up'
                 }
             }
