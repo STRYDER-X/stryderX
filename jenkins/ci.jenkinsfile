@@ -18,11 +18,10 @@ pipeline {
             }
         }
 
-        stage('Environment Setup') {
+        stage('Setup Container') {
             steps {
                 dir('stryderx') {
                     sh 'ls -ln && pwd'
-                    sh 'make env ALLOW_HOST_CMDS=true'
                     sh 'make up ALLOW_HOST_CMDS=true'
                 }
             }
@@ -30,7 +29,7 @@ pipeline {
 
         stage('CI Gate') {
             steps {
-                sh "docker exec ${params.CONTAINER_NAME} make help && make gate"
+                sh "docker exec ${params.CONTAINER_NAME} ls -ln && make help && make gate"
             }
         }
     }
