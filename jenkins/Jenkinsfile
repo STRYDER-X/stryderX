@@ -16,7 +16,7 @@ pipeline {
 
     parameters {
         choice {
-            name : 'AGENT',
+            name: 'AGENT',
             choices: ['StryderX-Core', 'Linux'],
             descripition: 'Select the specific Agent for this to run on.'
         }
