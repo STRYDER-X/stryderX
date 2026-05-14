@@ -1,43 +1,18 @@
 pipeline {
     agent {
+        dockerfile {
+            filename 'Dockerfile.dev'
+            dir 'stryderx_docker'
+            reuseNode true
+        }
         label 'StryderX-Core'
     }
 
-    parameters {
-        string(name: 'CONTAINER_NAME', defaultValue: 'stryderx-core', description: 'Name of StryderX container.')
-    }
-
     stages {
-        stage('Checkout') {
+        stage('Verify Repo Copied Over') {
             steps {
-                dir('stryderx') {
-                    checkout scm
-                }
-            }
-        }
-
-        stage('Setup Container') {
-            steps {
-                dir('stryderx') {
-                    sh 'ls -ln && pwd'
-                    sh 'make up ALLOW_HOST_CMDS=true'
-                }
-            }
-        }
-
-        stage('CI Gate') {
-            steps {
-                sh "docker exec ${params.CONTAINER_NAME} pwd"
-                sh "docker exec ${params.CONTAINER_NAME} ls -ln"
-            }
-        }
-    }
-
-    post {
-        always {
-            dir('stryderx') {
-                sh 'make down ALLOW_HOST_CMDS=true'
-                sh 'make clean ALLOW_HOST_CMDS=true'
+                sh 'pwd'
+                sh 'ls -ln'
             }
         }
     }
