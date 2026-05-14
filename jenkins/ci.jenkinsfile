@@ -5,7 +5,6 @@ pipeline {
             dir 'stryderx_docker'
             reuseNode true
         }
-        label 'StryderX-Core'
     }
 
     stages {
