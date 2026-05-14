@@ -15,11 +15,11 @@ pipeline {
     }
 
     parameters {
-        choice {
+        choice (
             name: 'AGENT',
             choices: ['StryderX-Core', 'Linux'],
             descripition: 'Select the specific Agent for this to run on.'
-        }
+        )
     }
 
     stages {
