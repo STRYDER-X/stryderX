@@ -4,6 +4,7 @@ pipeline {
             filename 'stryderx_docker/Dockerfile'
             dir '.'
             reuseNode true
+            label 'StryderX'
         }
     }
 
@@ -36,7 +37,9 @@ pipeline {
 
     post {
         always {
-            sh 'make report'
+            node(env.NODE_NAME) {
+                sh 'make report'
+            }
         }
     }
 }
