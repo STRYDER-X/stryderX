@@ -8,10 +8,33 @@ pipeline {
     }
 
     stages {
-        stage('Verify Repo Copied Over') {
+        stage('Setup') {
             steps {
-                sh 'pwd'
-                sh 'ls -ln'
+                sh 'make setup ALLOW_HOST_CMD=true'
+            }
+        }
+
+        stage('Lint') {
+            steps {
+                sh 'make lint ALLOW_HOST_CMD=true'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'make build ALLOW_HOST_CMD=true'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'make test ALLOW_HOST_CMD=true'
+            }
+        }
+
+        stage('Report') {
+            steps {
+                sh 'make report ALLOW_HOST_CMD=true'
             }
         }
     }
