@@ -10,31 +10,31 @@ pipeline {
     stages {
         stage('Setup') {
             steps {
-                sh 'make setup ALLOW_HOST_CMD=true'
+                sh 'make setup'
             }
         }
 
         stage('Lint') {
             steps {
-                sh 'make lint ALLOW_HOST_CMD=true'
+                sh 'make lint'
             }
         }
 
         stage('Build') {
             steps {
-                sh 'make build ALLOW_HOST_CMD=true'
+                sh 'make build'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'make test ALLOW_HOST_CMD=true'
+                sh 'make test'
             }
         }
 
         stage('Report') {
             steps {
-                sh 'make report ALLOW_HOST_CMD=true'
+                sh 'make report'
             }
         }
     }

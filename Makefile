@@ -10,13 +10,13 @@ REPORT_FILE    := test_report.log
 REPORT_PATH    := $(LOG_DIR)/$(REPORT_FILE)
 
 INSIDE_CONTAINER := $(shell [ -f /.dockerenv ] && echo "true" || echo "false")
-ALLOW_HOST_CMDS ?= false
+ALLOW_HOST_CMDS_ENABLED := $(if $(filter environment command line,$(origin ALLOW_HOST_CMDS)),true,false)
 
 # List of packages that support Doxygen 'docs' target
 DOC_PACKAGES := stryderx_hardware
 
 ifeq ($(filter true,$(INSIDE_CONTAINER)),true)
-    ifeq ($(filter-out true,$(ALLOW_HOST_CMDS)),)
+    ifeq ($(ALLOW_HOST_CMDS_ENABLED),true)
         ifeq ($(filter hardware,$(MAKECMDGOALS)),hardware)
             EXEC := cd $(DOCKER_DIR) && docker compose --profile hardware exec $(DOCKER_HARDWARE_SERVICE) /bin/bash -c
         else
