@@ -4,7 +4,7 @@ pipeline {
             filename 'stryderx_docker/Dockerfile'
             dir '.'
             reuseNode true
-            label 'StryderX'
+            label "${params.AGENT}"
         }
     }
 
@@ -12,6 +12,14 @@ pipeline {
         timeout(time: 30, unit: 'MINUTES')
         timestamps()
         ansiColor('xterm')
+    }
+
+    parameters {
+        choice {
+            name : 'AGENT',
+            choices: ['StryderX-Core', 'Linux'],
+            descripition: 'Select the specific Agent for this to run on.'
+        }
     }
 
     stages {
@@ -32,7 +40,6 @@ pipeline {
                 sh 'make test'
             }
         }
-
     }
 
     post {
