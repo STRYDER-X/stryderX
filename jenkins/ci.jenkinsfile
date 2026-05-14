@@ -1,8 +1,8 @@
 pipeline {
     agent {
         dockerfile {
-            filename 'Dockerfile.dev'
-            dir 'stryderx_docker'
+            filename 'stryderx_docker/Dockerfile.dev'
+            dir '.'
             reuseNode true
         }
     }
