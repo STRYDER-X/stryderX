@@ -1,19 +1,19 @@
 pipeline {
     agent {
         dockerfile {
-            filename 'stryderx_docker/Dockerfile.dev'
+            filename 'stryderx_docker/Dockerfile'
             dir '.'
             reuseNode true
         }
     }
 
-    stages {
-        stage('Setup') {
-            steps {
-                sh 'make setup'
-            }
-        }
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+        timestamps()
+        ansiColor('xterm')
+    }
 
+    stages {
         stage('Lint') {
             steps {
                 sh 'make lint'
@@ -32,10 +32,11 @@ pipeline {
             }
         }
 
-        stage('Report') {
-            steps {
-                sh 'make report'
-            }
+    }
+
+    post {
+        always {
+            sh 'make report'
         }
     }
 }
