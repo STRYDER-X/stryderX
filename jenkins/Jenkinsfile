@@ -44,9 +44,7 @@ pipeline {
 
     post {
         always {
-            node(env.NODE_NAME) {
-                sh 'make report'
-            }
+            sh 'make report'
         }
     }
 }
