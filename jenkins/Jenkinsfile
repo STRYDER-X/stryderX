@@ -36,15 +36,16 @@ pipeline {
             }
         }
 
-        stage('Lint') {
-            steps {
-                sh 'make lint'
-            }
-        }
-
         stage('Report') {
             steps {
                 sh 'make report'
+            }
+
+        }
+
+        stage('Lint') {
+            steps {
+                sh 'make lint'
             }
         }
     }
