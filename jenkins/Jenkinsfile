@@ -40,11 +40,11 @@ pipeline {
                 sh 'make test'
             }
         }
-    }
 
-    post {
-        always {
-            sh 'make report'
+        stage('Report') {
+            steps {
+                sh 'make report'
+            }
         }
     }
 }
