@@ -1,0 +1,60 @@
+pipeline {
+    agent {
+        dockerfile {
+            filename 'stryderx_docker/Dockerfile'
+            dir '.'
+            reuseNode true
+            label "${params.AGENT}"
+        }
+    }
+
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+        timestamps()
+        ansiColor('xterm')
+    }
+
+    parameters {
+        choice (
+            name: 'AGENT',
+            choices: ['StryderX-Core', 'Linux'],
+            description: 'Select the specific Agent for this to run on.'
+        )
+    }
+
+    stages {
+        stage('Lint') {
+            steps {
+                sh 'make lint'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'make build'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'make test'
+            }
+        }
+
+        stage('Report') {
+            steps {
+                sh 'make report'
+            }
+        }
+
+        stage('Docs') {
+            when {
+                branch 'main'
+            }
+            steps {
+                sh 'make docs'
+                sh 'ls -ln build/stryderx_hardware/docs/html/*'
+            }
+        }
+    }
+}

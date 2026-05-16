@@ -8,7 +8,7 @@ RUN groupadd -f input
 RUN mkdir -p /home/rpi/stryderx /home/rpi/.cache/pre-commit && \
     chown -R rpi:rpi /home/rpi/stryderx /home/rpi/.cache
 
-RUN wget -qO /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-arm64 && \
+RUN wget -qO /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64 && \
     chmod a+x /usr/local/bin/hadolint
 
 RUN apt-get update && apt-get install -y --no-install-recommends \

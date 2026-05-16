@@ -3,7 +3,7 @@ services:
   stryderx-core:
     build:
       context: ..
-      dockerfile: stryderx_docker/Dockerfile.dev
+      dockerfile: stryderx_docker/Dockerfile
       args:
         - APP_VERSION=${APP_VERSION:-dev}
         - GIT_COMMIT=${GIT_COMMIT:-unknown}
