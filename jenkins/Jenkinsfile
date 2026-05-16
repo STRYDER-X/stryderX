@@ -23,6 +23,11 @@ pipeline {
     }
 
     stages {
+        stage('Lint') {
+            steps {
+                sh 'make lint'
+            }
+        }
 
         stage('Build') {
             steps {
@@ -41,12 +46,6 @@ pipeline {
                 sh 'make report'
             }
 
-        }
-
-        stage('Lint') {
-            steps {
-                sh 'make lint'
-            }
         }
     }
 }
