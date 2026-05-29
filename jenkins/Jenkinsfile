@@ -12,10 +12,12 @@ pipeline {
         timeout(time: 30, unit: 'MINUTES')
         timestamps()
         ansiColor('xterm')
+        disableConcurrentBuilds()
+        buildDiscarder(logRotator(numToKeepStr: '20', artifactNumToKeepStr: '10'))
     }
 
     parameters {
-        choice (
+        choice(
             name: 'AGENT',
             choices: ['StryderX-Core', 'Linux'],
             description: 'Select the specific Agent for this to run on.'
@@ -41,20 +43,26 @@ pipeline {
             }
         }
 
-        stage('Report') {
-            steps {
-                sh 'make report'
-            }
-        }
-
         stage('Docs') {
             when {
                 branch 'main'
             }
             steps {
                 sh 'make docs'
-                sh 'ls -ln build/stryderx_hardware/docs/html/*'
+                archiveArtifacts artifacts: 'build/stryderx_hardware/docs/html/**', allowEmptyArchive: false
             }
+        }
+    }
+
+    post {
+        always {
+            sh 'make report || true'
+            archiveArtifacts artifacts: 'log/test_report.log', allowEmptyArchive: true
+            junit testResults: 'build/**/test_results/**/*.xml', allowEmptyResults: true
+        }
+
+        cleanup {
+            cleanWs(deleteDirs: true, disableDeferredWipeout: true, notFailBuild: true)
         }
     }
 }
