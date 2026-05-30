@@ -15,6 +15,7 @@ Package-specific behavior, nodes, launch files, parameters, and interfaces are d
 | `src/stryderx_hardware` | ROS 2 hardware-facing node package. |
 | `vendor/rosmaster_lib_v3` | Vendor library used by the robot controller nodes. |
 | `stryderx_docker` | Docker image, Compose services, and setup scripts. |
+| `jenkins` | Jenkins pipeline and CI documentation. |
 | `Makefile` | Workspace entry point for Docker, build, lint, test, docs, and cleanup tasks. |
 
 ## Package Docs
@@ -97,9 +98,33 @@ make build
 make lint
 make test
 make report
+make view
 make docs
+make clean
+make purge
 make down
 ```
+
+## CI
+
+Jenkins pipeline configuration lives in [`jenkins/`](jenkins/).
+
+The CI pipeline runs the same core checks as local development:
+
+```bash
+make lint
+make build
+make test
+make report
+```
+
+On `main`, Jenkins also generates and archives Doxygen docs with:
+
+```bash
+make docs
+```
+
+See [`jenkins/README.md`](jenkins/README.md) for pipeline details, artifacts, and common CI failure notes.
 
 ## Development
 

@@ -10,14 +10,25 @@ REPORT_FILE    := test_report.log
 REPORT_PATH    := $(LOG_DIR)/$(REPORT_FILE)
 
 INSIDE_CONTAINER := $(shell [ -f /.dockerenv ] && echo "true" || echo "false")
+ALLOW_HOST_CMDS_ENABLED := $(if $(filter environment command line,$(origin ALLOW_HOST_CMDS)),true,false)
 
 # List of packages that support Doxygen 'docs' target
 DOC_PACKAGES := stryderx_hardware
 
-ifeq ($(INSIDE_CONTAINER), true)
-    EXEC := /bin/bash -c
-    HOST_ONLY = @echo -e "\033[31m[Error]\033[0m Target '$@' is Host-Only." && exit 1
-    CONTEXT := \033[32mInside Container\033[0m
+ifeq ($(filter true,$(INSIDE_CONTAINER)),true)
+    ifeq ($(ALLOW_HOST_CMDS_ENABLED),true)
+        ifeq ($(filter hardware,$(MAKECMDGOALS)),hardware)
+            EXEC := cd $(DOCKER_DIR) && docker compose --profile hardware exec $(DOCKER_HARDWARE_SERVICE) /bin/bash -c
+        else
+            EXEC := cd $(DOCKER_DIR) && docker compose exec $(DOCKER_SERVICE) /bin/bash -c
+        endif
+        HOST_ONLY = $(1)
+        CONTEXT := \033[34mHost System\033[0m
+    else
+        EXEC := /bin/bash -c
+        HOST_ONLY = @echo -e "\033[31m[Error]\033[0m Target '$@' is Host-Only." && exit 1
+        CONTEXT := \033[32mInside Container\033[0m
+    endif
 else
     ifeq ($(filter hardware,$(MAKECMDGOALS)),hardware)
         EXEC := cd $(DOCKER_DIR) && docker compose --profile hardware exec $(DOCKER_HARDWARE_SERVICE) /bin/bash -c
@@ -58,11 +69,10 @@ else
 	$(call HOST_ONLY, cd $(DOCKER_DIR) && docker compose exec $(DOCKER_SERVICE) /bin/bash)
 endif
 
-clean: ## [Host] Remove StryderX containers and prune volumes
+clean: ## [Host] Remove only StryderX containers and Compose-managed volumes
 	$(call HOST_ONLY, cd $(DOCKER_DIR) && containers=$$(docker compose --profile hardware ps -aq); \
 		if [ -n "$$containers" ]; then docker rm -f $$containers; fi; \
-		docker compose --profile hardware down --remove-orphans --volumes; \
-		docker system prune -af --volumes)
+		docker compose --profile hardware down --remove-orphans --volumes)
 
 setup: ## Initialize git hooks in root and submodules
 	@$(EXEC) "$(DOCKER_DIR)/scripts/setup_pre_commit.sh"
